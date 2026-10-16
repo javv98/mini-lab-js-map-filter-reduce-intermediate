@@ -2,6 +2,8 @@
 // Mini LAB | Map, Filter & Reduce — Intermedio
 // =============================================================================
 
+const { startTransition } = require("react")
+
 // =============================================================================
 // ITERACION 1 — .map() intermedio
 // =============================================================================
@@ -14,7 +16,7 @@
 //   celsiusToFahrenheit([0, 100, 37]) → [32, 212, 98.6]
 //   celsiusToFahrenheit([-40]) → [-40]
 function celsiusToFahrenheit(temps) {
-  // Tu codigo aqui
+  return temps.map(temperature => temperature * 9/5 + 32)
 }
 
 // 2. addFullName(people)
@@ -25,7 +27,13 @@ function celsiusToFahrenheit(temps) {
 //   addFullName([{ firstName: "Ana", lastName: "Garcia" }])
 //   → [{ firstName: "Ana", lastName: "Garcia", fullName: "Ana Garcia" }]
 function addFullName(people) {
-  // Tu codigo aqui
+  return people.map(person => {
+    let newPerson = {
+    firstName: person.firstName,
+    lastName: person.lastName,
+    fullName: `${person.firstName} ${person.lastName}`}
+    return newPerson
+  })
 }
 
 // 3. getAcronyms(phrases)
@@ -36,7 +44,12 @@ function addFullName(people) {
 //   getAcronyms(["as soon as possible", "frequently asked questions"]) → ["ASAP", "FAQ"]
 //   getAcronyms(["do it yourself"]) → ["DIY"]
 function getAcronyms(phrases) {
-  // Tu codigo aqui
+  return phrases.map(phrase => {
+    let arrSeparate = phrase.split(" ")
+    let initials = arrSeparate.map(word => word[0].toUpperCase())
+    let finalAcronym = initials.join("")
+    return finalAcronym
+  })
 }
 
 // 4. applyDiscount(products, discount)
@@ -49,7 +62,14 @@ function getAcronyms(phrases) {
 //   applyDiscount([{ name: "Cafe", price: 5 }], 50)
 //   → [{ name: "Cafe", price: 2.5, originalPrice: 5 }]
 function applyDiscount(products, discount) {
-  // Tu codigo aqui
+  return products.map(product => {
+    let newProduct = {
+      name: product.name,
+      price: (product.price * (1 - discount/100)),
+      originalPrice: product.price,
+    }
+    return newProduct
+  })
 }
 
 
@@ -64,7 +84,7 @@ function applyDiscount(products, discount) {
 //   getInStock([{ name: "A", stock: 5 }, { name: "B", stock: 0 }])
 //   → [{ name: "A", stock: 5 }]
 function getInStock(products) {
-  // Tu codigo aqui
+  return products.filter (product => product.stock > 0)
 }
 
 // 6. getUniqueValues(array)
@@ -75,7 +95,15 @@ function getInStock(products) {
 //   getUniqueValues([1, 2, 2, 3, 3, 3]) → [1, 2, 3]
 //   getUniqueValues(["a", "b", "a", "c"]) → ["a", "b", "c"]
 function getUniqueValues(array) {
-  // Tu codigo aqui
+  let aux = []
+  return array.filter(value => {
+    if (!(aux.includes(value))) {
+      aux.push(value)
+      return true
+    } else if (aux.includes(value)) {
+      return false
+    }
+  }) // JAVI: He usado una variable auxiliar que va almacenando los elementos ya usados y el bucle analiza si el elemento está ahí o no, en el caso de que esté no lo vuelve a incluir ya que significa que se ha incluido anteriormente.
 }
 
 // 7. searchByName(items, query)
@@ -85,7 +113,11 @@ function getUniqueValues(array) {
 //   searchByName([{ name: "JavaScript" }, { name: "Java" }, { name: "Python" }], "java")
 //   → [{ name: "JavaScript" }, { name: "Java" }]
 function searchByName(items, query) {
-  // Tu codigo aqui
+  return items.filter( item => {
+    queryMay = query.toUpperCase()
+    nameMay = item.name.toUpperCase()
+    return nameMay.includes(queryMay)
+  })
 }
 
 // 8. getInRange(numbers, min, max)
@@ -95,7 +127,7 @@ function searchByName(items, query) {
 //   getInRange([5, 10, 15, 20, 25], 10, 20) → [10, 15, 20]
 //   getInRange([1, 2, 3, 4, 5], 2, 4) → [2, 3, 4]
 function getInRange(numbers, min, max) {
-  // Tu codigo aqui
+  return numbers.filter (number => number >= min && number <= max)
 }
 
 
@@ -111,7 +143,12 @@ function getInRange(numbers, min, max) {
 //   getLongestString(["sol", "estrella", "luna"]) → "estrella"
 //   getLongestString(["ab", "cd"]) → "ab"
 function getLongestString(strings) {
-  // Tu codigo aqui
+  return strings.reduce((acc, el) => {
+    if (el.length > acc.length) {
+      acc = el
+    }
+    return acc
+  }, "")
 }
 
 // 10. buildObject(keys, values)
@@ -122,7 +159,10 @@ function getLongestString(strings) {
 //   buildObject(["name", "age"], ["Ana", 25]) → { name: "Ana", age: 25 }
 //   buildObject(["a", "b", "c"], [1, 2, 3]) → { a: 1, b: 2, c: 3 }
 function buildObject(keys, values) {
-  // Tu codigo aqui
+  return keys.reduce((acc, el, index) => {
+    acc[el] = values[index]
+    return acc
+  }, {})
 }
 
 // 11. calculateAverage(numbers)
@@ -133,7 +173,13 @@ function buildObject(keys, values) {
 //   calculateAverage([10, 20, 30]) → 20
 //   calculateAverage([]) → 0
 function calculateAverage(numbers) {
-  // Tu codigo aqui
+  return numbers.reduce((acc, el, index, arr) => {
+    acc += el
+    if (index === arr.length - 1) {
+      acc = acc/arr.length
+    }
+    return acc
+  }, 0)
 }
 
 // 12. mergeObjects(arrayOfObjects)
@@ -144,7 +190,14 @@ function calculateAverage(numbers) {
 //   mergeObjects([{ a: 1 }, { b: 2 }, { a: 3, c: 4 }]) → { a: 3, b: 2, c: 4 }
 //   mergeObjects([{ x: 10 }, { y: 20 }]) → { x: 10, y: 20 }
 function mergeObjects(arrayOfObjects) {
-  // Tu codigo aqui
+  return arrayOfObjects.reduce((acc, el) => {
+    let keys = Object.keys(el)
+    let values = Object.values(el)
+    for (let i = 0; i < keys.length; i++) {
+      acc[keys[i]] = values[i]
+    }
+    return acc
+  }, {})
 }
 
 
@@ -164,7 +217,11 @@ function mergeObjects(arrayOfObjects) {
 //   )
 //   → ["GARCIA, Ana"]
 function getTopStudents(students, minGrade) {
-  // Tu codigo aqui
+  return students
+  .filter(student => student.grade >= minGrade)
+  .map(student => {
+    return student.lastName.toUpperCase() + ", " + student.firstName
+  })
 }
 
 // 14. getTotalCartPrice(cart)
@@ -178,7 +235,12 @@ function getTopStudents(students, minGrade) {
 //   ])
 //   → 25
 function getTotalCartPrice(cart) {
-  // Tu codigo aqui
+  return cart
+  .map(item => item.price * item.quantity)
+  .reduce((acc, el) => {
+    acc += el
+    return acc
+  }, 0)
 }
 
 // 15. getWordFrequencies(text)
@@ -190,5 +252,19 @@ function getTotalCartPrice(cart) {
 //   getWordFrequencies("Hola mundo hola") → [{ word: "hola", count: 2 }, { word: "mundo", count: 1 }]
 //   getWordFrequencies("a b a b a") → [{ word: "a", count: 3 }, { word: "b", count: 2 }]
 function getWordFrequencies(text) {
-  // Tu codigo aqui
+  return text
+  .toLowerCase() // ["hola", "mundo", "hola"]
+  .split(" ") // ["Hola", "mundo", "hola"]
+  .reduce((acc, el, i, arr) => {
+    if (i === arr.indexOf(el) && text !== ""){
+      let count = 0
+      for (let word of arr) {
+        if (el === word) {
+          count += 1
+        }
+      }
+      acc.push({word: el, count: count})
+    }
+    return acc
+  }, [])
 }
